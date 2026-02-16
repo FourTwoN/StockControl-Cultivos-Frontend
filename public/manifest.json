@@ -1,0 +1,15 @@
+{
+  "name": "Demeter AI 2.0",
+  "short_name": "Demeter",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1B4F72",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

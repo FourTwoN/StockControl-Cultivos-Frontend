@@ -1,0 +1,47 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NGINX_CONFIG=local
+        - VITE_API_URL=http://localhost:8080
+        - VITE_AUTH0_DOMAIN=${AUTH0_DOMAIN:-demeter.auth0.com}
+        - VITE_AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID:-placeholder}
+        - VITE_AUTH0_AUDIENCE=${AUTH0_AUDIENCE:-https://api.demeter.app}
+        - VITE_AUTH0_CALLBACK_URL=http://localhost:3000/callback
+        - VITE_AUTH_BYPASS=true
+        - VITE_DEFAULT_TENANT_ID=local
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  backend:
+    image: demeter-backend:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=demeter
+      - DB_USER=demeter
+      - DB_PASS=demeter
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN}
+      - AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID}
+      - AUTH0_AUDIENCE=${AUTH0_AUDIENCE}
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=demeter
+      - POSTGRES_USER=demeter
+      - POSTGRES_PASSWORD=demeter
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

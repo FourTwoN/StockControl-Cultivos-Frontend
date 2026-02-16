@@ -1,0 +1,319 @@
+@import 'tailwindcss';
+
+/* ============================================================================
+   THEME — Color System + Design Tokens
+   ============================================================================ */
+
+@theme {
+  /* --- Brand colors (overridden per-tenant by TenantTheme.tsx) --- */
+  --color-primary: var(--color-primary, #1b4f72);
+  --color-secondary: var(--color-secondary, #2e86c1);
+  --color-accent: var(--color-accent, #27ae60);
+
+  /* --- Surfaces --- */
+  --color-background: var(--color-background, #f8fafc);
+  --color-surface: var(--color-surface, #ffffff);
+  --color-surface-hover: var(--color-surface-hover, #f1f5f9);
+
+  /* --- Text --- */
+  --color-text-primary: var(--color-text-primary, #0f172a);
+  --color-text-secondary: var(--color-text-secondary, #475569);
+  --color-muted: var(--color-muted, #64748b);
+
+  /* --- Borders --- */
+  --color-border: var(--color-border, #e2e8f0);
+
+  /* --- Semantic --- */
+  --color-destructive: var(--color-destructive, #ef4444);
+  --color-warning: var(--color-warning, #f59e0b);
+  --color-success: var(--color-success, #10b981);
+}
+
+/* ============================================================================
+   ROOT — Shadows, Transitions, RGB tokens
+   ============================================================================ */
+
+:root {
+  /* Shadow scale */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+  /* Primary glow (overridden per-tenant via TenantTheme) */
+  --shadow-glow-primary: 0 4px 14px rgba(27, 79, 114, 0.25);
+
+  /* Glass backgrounds */
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(226, 232, 240, 0.6);
+
+  /* Transition presets */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-fast: 150ms var(--ease-out-quart);
+  --transition-base: 200ms var(--ease-out-quart);
+  --transition-slow: 300ms var(--ease-out-quart);
+
+  /* shadcn/ui compatibility tokens */
+  --radius: 0.625rem;
+
+  /* RGB versions for opacity support (used by shadcn components) */
+  --primary-rgb: 27, 79, 114;
+  --destructive-rgb: 239, 68, 68;
+  --success-rgb: 16, 185, 129;
+  --warning-rgb: 245, 158, 11;
+}
+
+/* ============================================================================
+   DARK MODE
+   ============================================================================ */
+
+.dark {
+  --color-background: #0b1120;
+  --color-surface: #111827;
+  --color-surface-hover: #1e293b;
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-muted: #64748b;
+  --color-border: #1e293b;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.5);
+
+  --glass-bg: rgba(17, 24, 39, 0.8);
+  --glass-border: rgba(30, 41, 59, 0.6);
+
+  /* RGB tokens stay the same in dark mode (colors don't change, just surfaces) */
+
+  color-scheme: dark;
+}
+
+/* ============================================================================
+   BASE
+   ============================================================================ */
+
+body {
+  margin: 0;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  transition:
+    background-color var(--transition-slow),
+    color var(--transition-slow);
+}
+
+::selection {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+/* ============================================================================
+   KEYFRAME ANIMATIONS
+   ============================================================================ */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes toast-progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
+
+/* Glassmorphism */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-color: var(--glass-border);
+}
+
+/* Hover lift effect */
+.hover-lift {
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Hover glow effect */
+.hover-glow {
+  transition: box-shadow var(--transition-base);
+}
+
+.hover-glow:hover {
+  box-shadow: var(--shadow-glow-primary);
+}
+
+/* Press scale effect */
+.press-scale {
+  transition: transform 0.1s ease;
+}
+
+.press-scale:active {
+  transform: scale(0.98);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gradient primary background */
+.gradient-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+}
+
+/* Animation utilities */
+.animate-fade-in {
+  animation: fade-in 0.3s var(--ease-out-quart) both;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s var(--ease-out-quart) both;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s var(--ease-out-quart) both;
+}
+
+.animate-zoom-in {
+  animation: zoom-in 0.4s var(--ease-out-quart) both;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.2s var(--ease-out-quart) both;
+}
+
+/* Skeleton shimmer */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-border) 25%,
+    var(--color-surface-hover) 50%,
+    var(--color-border) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ============================================================================
+   CUSTOM SCROLLBARS
+   ============================================================================ */
+
+/* Thin scrollbars globally */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+/* ============================================================================
+   FOCUS RING OVERRIDE
+   ============================================================================ */
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

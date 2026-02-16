@@ -1,0 +1,79 @@
+steps:
+  # Build Docker image with build args for Vite env vars
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build'
+    args:
+      - 'build'
+      - '--build-arg'
+      - 'VITE_API_URL=${_VITE_API_URL}'
+      - '--build-arg'
+      - 'VITE_AUTH0_DOMAIN=${_VITE_AUTH0_DOMAIN}'
+      - '--build-arg'
+      - 'VITE_AUTH0_CLIENT_ID=${_VITE_AUTH0_CLIENT_ID}'
+      - '--build-arg'
+      - 'VITE_AUTH0_AUDIENCE=${_VITE_AUTH0_AUDIENCE}'
+      - '--build-arg'
+      - 'VITE_AUTH0_CALLBACK_URL=${_VITE_AUTH0_CALLBACK_URL}'
+      - '--build-arg'
+      - 'VITE_AUTH_BYPASS=${_VITE_AUTH_BYPASS}'
+      - '--build-arg'
+      - 'VITE_DEFAULT_TENANT_ID=${_VITE_DEFAULT_TENANT_ID}'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_INDUSTRY}-frontend:$SHORT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_INDUSTRY}-frontend:latest'
+      - '.'
+
+  # Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'push'
+    args:
+      - 'push'
+      - '--all-tags'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_INDUSTRY}-frontend'
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'deploy'
+    args:
+      - 'run'
+      - 'deploy'
+      - '${_INDUSTRY}-frontend'
+      - '--image'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_INDUSTRY}-frontend:$SHORT_SHA'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--cpu'
+      - '1'
+      - '--memory'
+      - '256Mi'
+      - '--min-instances'
+      - '0'
+      - '--max-instances'
+      - '5'
+      - '--concurrency'
+      - '80'
+
+substitutions:
+  _INDUSTRY: template
+  _REGION: us-central1
+  _REPOSITORY: demeter-frontend
+  # Vite build-time variables (override in Cloud Build trigger or command)
+  _VITE_API_URL: https://api.demeter.app
+  _VITE_AUTH0_DOMAIN: demeter.auth0.com
+  _VITE_AUTH0_CLIENT_ID: ''
+  _VITE_AUTH0_AUDIENCE: https://api.demeter.app
+  _VITE_AUTH0_CALLBACK_URL: https://${_INDUSTRY}.demeter.app/callback
+  _VITE_AUTH_BYPASS: 'false'
+  _VITE_DEFAULT_TENANT_ID: ''
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  substitution_option: ALLOW_LOOSE
+
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_INDUSTRY}-frontend:$SHORT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_INDUSTRY}-frontend:latest'

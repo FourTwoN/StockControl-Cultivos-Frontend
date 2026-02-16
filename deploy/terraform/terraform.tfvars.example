@@ -1,0 +1,22 @@
+# GCP Configuration
+project_id = "your-gcp-project-id"
+region     = "us-central1"
+
+# Tenant/Industry Configuration
+industry = "cultivos"
+
+# Docker Image (initially use a placeholder, Cloud Build will update)
+image = "us-central1-docker.pkg.dev/your-project/demeter-frontend/cultivos-frontend:latest"
+
+# GitHub Configuration (optional - for Cloud Build trigger)
+github_owner  = "your-github-org"
+github_repo   = "demeter-frontend"
+github_branch = "main"
+
+# Auth0 Configuration
+auth0_domain    = "your-tenant.auth0.com"
+auth0_client_id = "your-auth0-client-id"
+auth0_audience  = "https://api.demeter.app"
+
+# Backend API URL
+api_url = "https://api.demeter.app"

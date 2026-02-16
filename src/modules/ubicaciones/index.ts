@@ -1,0 +1,5 @@
+export { default as UbicacionesRoutes } from './routes.tsx'
+export { useWarehouses, warehouseKeys } from './hooks/useWarehouses.ts'
+export { useWarehouse } from './hooks/useWarehouse.ts'
+export { useLocations, locationKeys } from './hooks/useLocations.ts'
+export { useBins, binKeys } from './hooks/useBins.ts'
