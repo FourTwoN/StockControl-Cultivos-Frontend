@@ -1,4 +1,27 @@
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+/* ============================================================================
+   MATERIAL SYMBOLS
+   ============================================================================ */
+
+.material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
 
 /* ============================================================================
    THEME — Color System + Design Tokens
@@ -59,9 +82,20 @@
 
   /* RGB versions for opacity support (used by shadcn components) */
   --primary-rgb: 27, 79, 114;
+  --secondary-rgb: 46, 134, 193;
   --destructive-rgb: 239, 68, 68;
   --success-rgb: 16, 185, 129;
   --warning-rgb: 245, 158, 11;
+
+  /* Demeter-specific tokens (Cultivos tenant styling) */
+  --demeter-text-primary: #1f2933;
+  --demeter-text-secondary: #55637a;
+  --demeter-text-soft: #7b889e;
+  --demeter-border: #d9e2ec;
+  --demeter-border-sidebar: #dee3de;
+  --demeter-surface-muted: #f0f4ff;
+  --demeter-shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.12);
+  --demeter-radius-lg: 16px;
 }
 
 /* ============================================================================

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { Link, useLocation } from 'react-router'
-import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { NavItem } from '@core/layout/types'
 import { useAuth } from '@core/auth/useAuth'
@@ -10,39 +10,28 @@ import {
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
-  Avatar,
-  AvatarFallback,
-  Separator,
 } from '@core/components/ui'
+import { DemeterLogo } from '@core/components/ui/DemeterLogo'
+import { MaterialIcon } from '@core/components/ui/MaterialIcon'
+
+const SIDEBAR_COLLAPSED_WIDTH = 72
+const SIDEBAR_EXPANDED_WIDTH = 256
 
 interface SidebarProps {
   readonly items: readonly NavItem[]
   readonly isOpen: boolean
   readonly onClose: () => void
-  readonly isCollapsed: boolean
-  readonly onToggleCollapse: () => void
 }
 
-export function Sidebar({ items, isOpen, onClose, isCollapsed, onToggleCollapse }: SidebarProps) {
+export function Sidebar({ items, isOpen, onClose }: SidebarProps) {
   const location = useLocation()
   const { user } = useAuth()
   const [isHoverExpanded, setIsHoverExpanded] = useState(false)
-
-  const effectiveExpanded = !isCollapsed || isHoverExpanded
 
   const isActive = useCallback(
     (path: string) => location.pathname === path || location.pathname.startsWith(`${path}/`),
     [location.pathname],
   )
-
-  const initials = user?.name
-    ? user.name
-        .split(' ')
-        .map((part) => part[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2)
-    : '??'
 
   return (
     <>
@@ -62,20 +51,22 @@ export function Sidebar({ items, isOpen, onClose, isCollapsed, onToggleCollapse 
 
       {/* Sidebar */}
       <aside
-        onMouseEnter={() => {
-          if (isCollapsed) setIsHoverExpanded(true)
-        }}
-        onMouseLeave={() => {
-          if (isCollapsed) setIsHoverExpanded(false)
-        }}
+        onMouseEnter={() => setIsHoverExpanded(true)}
+        onMouseLeave={() => setIsHoverExpanded(false)}
         className={cn(
-          'fixed top-14 left-0 z-50 flex h-[calc(100vh-3.5rem)] flex-col border-r border-border/50 bg-surface transition-all duration-300',
+          'fixed top-0 left-0 z-50 flex h-screen flex-col bg-white border-r',
           isOpen ? 'translate-x-0' : '-translate-x-full',
           'md:translate-x-0',
-          effectiveExpanded ? 'md:w-60' : 'md:w-16',
-          'w-60',
+          'w-64 md:w-auto',
         )}
-        style={{ transitionTimingFunction: 'cubic-bezier(0.25, 1, 0.5, 1)' }}
+        style={{
+          width: 'var(--sidebar-width)',
+          borderColor: 'var(--demeter-border-sidebar)',
+          transition: 'width 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+          ['--sidebar-width' as string]: isHoverExpanded
+            ? `${SIDEBAR_EXPANDED_WIDTH}px`
+            : `${SIDEBAR_COLLAPSED_WIDTH}px`,
+        }}
       >
         {/* Mobile close button */}
         <div className="flex items-center justify-end p-2 md:hidden">
@@ -89,10 +80,15 @@ export function Sidebar({ items, isOpen, onClose, isCollapsed, onToggleCollapse 
           </button>
         </div>
 
+        {/* Logo */}
+        <div className="flex items-center px-4 py-5 md:px-3">
+          <DemeterLogo size="md" collapsed={!isHoverExpanded} />
+        </div>
+
         {/* Navigation items */}
-        <nav className="flex-1 overflow-y-auto px-2 py-2">
+        <nav className="flex-1 overflow-y-auto px-3 py-2">
           <TooltipProvider delayDuration={0}>
-            <ul className="relative flex flex-col gap-0.5">
+            <ul className="relative flex flex-col gap-1">
               {items.map((item) => {
                 const active = isActive(item.path)
                 const linkContent = (
@@ -100,33 +96,45 @@ export function Sidebar({ items, isOpen, onClose, isCollapsed, onToggleCollapse 
                     to={item.path}
                     onClick={onClose}
                     className={cn(
-                      'relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
+                      'relative flex items-center gap-3 rounded-lg p-3 text-sm transition-all duration-200',
                       active
-                        ? 'text-primary'
-                        : 'text-muted hover:bg-primary/[0.04] hover:text-text-primary',
-                      !effectiveExpanded && 'md:justify-center md:px-2',
+                        ? 'font-bold'
+                        : 'font-medium hover:bg-[rgba(64,160,74,0.1)]',
+                      !isHoverExpanded && 'md:justify-center',
                     )}
+                    style={{
+                      color: active ? 'var(--color-primary)' : 'var(--demeter-text-secondary)',
+                    }}
                   >
-                    {/* Active indicator pill */}
+                    {/* Active indicator background */}
                     <AnimatePresence>
                       {active && (
                         <motion.div
                           layoutId="sidebar-active-indicator"
-                          className="absolute inset-0 rounded-lg bg-primary/8 shadow-[var(--shadow-xs)]"
+                          className="absolute inset-0 rounded-lg"
+                          style={{ backgroundColor: 'rgba(64, 160, 74, 0.2)' }}
                           transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                         />
                       )}
                     </AnimatePresence>
 
                     <span className="relative z-10 flex-shrink-0">{item.icon}</span>
-                    <span className={cn('relative z-10', !effectiveExpanded && 'md:hidden')}>
+                    <span
+                      className={cn(
+                        'relative z-10 whitespace-nowrap transition-opacity duration-150',
+                        !isHoverExpanded && 'md:opacity-0 md:w-0 md:overflow-hidden',
+                      )}
+                      style={{
+                        transitionTimingFunction: 'cubic-bezier(0.4, 0, 1, 1)',
+                      }}
+                    >
                       {item.label}
                     </span>
                     {item.badge !== undefined && item.badge > 0 && (
                       <span
                         className={cn(
                           'relative z-10 ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-xs font-medium text-white',
-                          !effectiveExpanded && 'md:hidden',
+                          !isHoverExpanded && 'md:hidden',
                         )}
                       >
                         {item.badge}
@@ -137,7 +145,7 @@ export function Sidebar({ items, isOpen, onClose, isCollapsed, onToggleCollapse 
 
                 return (
                   <li key={item.path}>
-                    {!effectiveExpanded ? (
+                    {!isHoverExpanded ? (
                       <Tooltip>
                         <TooltipTrigger asChild className="hidden md:flex">
                           {linkContent}
@@ -156,42 +164,38 @@ export function Sidebar({ items, isOpen, onClose, isCollapsed, onToggleCollapse 
           </TooltipProvider>
         </nav>
 
-        {/* User avatar section */}
-        <div className="border-t border-border/50 p-2">
-          <div
-            className={cn(
-              'flex items-center gap-3 rounded-lg px-2 py-2',
-              !effectiveExpanded && 'md:justify-center',
-            )}
-          >
-            <Avatar className="h-8 w-8">
-              <AvatarFallback className="bg-primary/10 text-xs font-medium text-primary">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
-            <div className={cn('min-w-0 flex-1', !effectiveExpanded && 'md:hidden')}>
-              <p className="truncate text-sm font-medium text-text-primary">{user?.name}</p>
-              <p className="truncate text-xs text-muted">{user?.email}</p>
-            </div>
-          </div>
-        </div>
-
-        <Separator className="mx-2" />
-
-        {/* Collapse toggle (desktop only) */}
-        <div className="hidden p-2 md:block">
-          <button
-            type="button"
-            onClick={onToggleCollapse}
-            className="flex w-full items-center justify-center rounded-lg p-2 text-muted transition-all duration-200 hover:bg-surface-hover hover:text-text-primary"
-            aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          >
-            {isCollapsed && !isHoverExpanded ? (
-              <ChevronRight className="h-4 w-4" />
-            ) : (
-              <ChevronLeft className="h-4 w-4" />
-            )}
-          </button>
+        {/* User profile link at bottom */}
+        <div className="border-t px-3 py-3" style={{ borderColor: 'var(--demeter-border-sidebar)' }}>
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  to="/perfil"
+                  className={cn(
+                    'flex items-center gap-3 rounded-lg p-3 text-sm font-medium transition-all duration-200',
+                    'hover:bg-[rgba(64,160,74,0.1)]',
+                    !isHoverExpanded && 'md:justify-center',
+                  )}
+                  style={{ color: 'var(--demeter-text-secondary)' }}
+                >
+                  <MaterialIcon name="account_circle" size={20} />
+                  <span
+                    className={cn(
+                      'whitespace-nowrap transition-opacity duration-150',
+                      !isHoverExpanded && 'md:opacity-0 md:w-0 md:overflow-hidden',
+                    )}
+                  >
+                    {user?.name ?? 'Mi Perfil'}
+                  </span>
+                </Link>
+              </TooltipTrigger>
+              {!isHoverExpanded && (
+                <TooltipContent side="right" className="hidden md:block">
+                  Mi Perfil
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </aside>
     </>

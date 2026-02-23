@@ -9,6 +9,8 @@ const CSS_VARIABLE_NAMES = [
   '--color-accent',
   '--color-background',
   '--shadow-glow-primary',
+  '--primary-rgb',
+  '--secondary-rgb',
   '--logo-url',
   '--app-name',
 ] as const
@@ -35,9 +37,12 @@ export function TenantTheme({ children }: TenantThemeProps) {
     root.style.setProperty('--color-accent', theme.accent)
     root.style.setProperty('--color-background', theme.background)
 
-    // Derive glow shadow from tenant primary color
-    const rgb = hexToRgb(theme.primary)
-    root.style.setProperty('--shadow-glow-primary', `0 4px 14px rgba(${rgb}, 0.25)`)
+    // Derive RGB values and glow shadow from tenant colors
+    const primaryRgb = hexToRgb(theme.primary)
+    const secondaryRgb = hexToRgb(theme.secondary)
+    root.style.setProperty('--primary-rgb', primaryRgb)
+    root.style.setProperty('--secondary-rgb', secondaryRgb)
+    root.style.setProperty('--shadow-glow-primary', `0 4px 14px rgba(${primaryRgb}, 0.25)`)
 
     root.style.setProperty('--logo-url', theme.logoUrl ? `url(${theme.logoUrl})` : 'none')
     root.style.setProperty('--app-name', `"${theme.appName}"`)

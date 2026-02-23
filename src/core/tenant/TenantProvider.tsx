@@ -23,11 +23,11 @@ function createLocalTenantConfig(tenantId: string): TenantConfig {
     name: `Local Tenant ${tenantId}`,
     industry: Industry.CULTIVOS,
     theme: {
-      primary: '#16a34a',
-      secondary: '#0f172a',
+      primary: '#40a04a',
+      secondary: '#17cf17',
       accent: '#22c55e',
-      background: '#f8fafc',
-      appName: 'Stock Control (Local)',
+      background: '#f5f7fb',
+      appName: 'DemeterIA',
     },
     enabledModules: [...allModuleKeys],
     settings: {

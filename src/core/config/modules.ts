@@ -1,17 +1,7 @@
-import {
-  Package,
-  ShoppingCart,
-  BarChart3,
-  MapPin,
-  DollarSign,
-  Box,
-  Tag,
-  Users,
-  Camera,
-  MessageSquare,
-} from 'lucide-react'
 import { createElement } from 'react'
 import type { ReactNode } from 'react'
+
+import { MaterialIcon } from '@core/components/ui/MaterialIcon'
 
 export const ModuleType = {
   CORE: 'core',
@@ -24,6 +14,7 @@ export interface ModuleDefinition {
   readonly label: string
   readonly path: string
   readonly icon: ReactNode
+  readonly iconName: string
   readonly type: ModuleType
 }
 
@@ -31,80 +22,107 @@ const ICON_SIZE = 20
 
 export const moduleRegistry: readonly ModuleDefinition[] = [
   {
+    key: 'mapa',
+    label: 'Mapa',
+    path: '/mapa',
+    icon: createElement(MaterialIcon, { name: 'map', size: ICON_SIZE }),
+    iconName: 'map',
+    type: ModuleType.CORE,
+  },
+  {
+    key: 'cultivo',
+    label: 'Cultivo',
+    path: '/cultivo',
+    icon: createElement(MaterialIcon, { name: 'grass', size: ICON_SIZE }),
+    iconName: 'grass',
+    type: ModuleType.CORE,
+  },
+  {
     key: 'inventario',
     label: 'Inventario',
     path: '/inventario',
-    icon: createElement(Package, { size: ICON_SIZE }),
+    icon: createElement(MaterialIcon, { name: 'inventory_2', size: ICON_SIZE }),
+    iconName: 'inventory_2',
     type: ModuleType.CORE,
   },
   {
     key: 'productos',
     label: 'Productos',
     path: '/productos',
-    icon: createElement(ShoppingCart, { size: ICON_SIZE }),
+    icon: createElement(MaterialIcon, { name: 'shopping_cart', size: ICON_SIZE }),
+    iconName: 'shopping_cart',
     type: ModuleType.CORE,
   },
   {
     key: 'ventas',
     label: 'Ventas',
     path: '/ventas',
-    icon: createElement(DollarSign, { size: ICON_SIZE }),
+    icon: createElement(MaterialIcon, { name: 'payments', size: ICON_SIZE }),
+    iconName: 'payments',
     type: ModuleType.CORE,
   },
   {
     key: 'costos',
     label: 'Costos',
     path: '/costos',
-    icon: createElement(BarChart3, { size: ICON_SIZE }),
+    icon: createElement(MaterialIcon, { name: 'analytics', size: ICON_SIZE }),
+    iconName: 'analytics',
     type: ModuleType.CORE,
   },
   {
     key: 'ubicaciones',
     label: 'Ubicaciones',
     path: '/ubicaciones',
-    icon: createElement(MapPin, { size: ICON_SIZE }),
+    icon: createElement(MaterialIcon, { name: 'location_on', size: ICON_SIZE }),
+    iconName: 'location_on',
     type: ModuleType.CORE,
   },
   {
     key: 'empaquetado',
     label: 'Empaquetado',
     path: '/empaquetado',
-    icon: createElement(Box, { size: ICON_SIZE }),
+    icon: createElement(MaterialIcon, { name: 'package_2', size: ICON_SIZE }),
+    iconName: 'package_2',
     type: ModuleType.CORE,
   },
   {
     key: 'precios',
     label: 'Precios',
     path: '/precios',
-    icon: createElement(Tag, { size: ICON_SIZE }),
+    icon: createElement(MaterialIcon, { name: 'price_change', size: ICON_SIZE }),
+    iconName: 'price_change',
     type: ModuleType.CORE,
   },
   {
     key: 'usuarios',
     label: 'Usuarios',
     path: '/usuarios',
-    icon: createElement(Users, { size: ICON_SIZE }),
+    icon: createElement(MaterialIcon, { name: 'account_circle', size: ICON_SIZE }),
+    iconName: 'account_circle',
     type: ModuleType.CORE,
   },
   {
     key: 'analytics',
     label: 'Analytics',
     path: '/analytics',
-    icon: createElement(BarChart3, { size: ICON_SIZE }),
+    icon: createElement(MaterialIcon, { name: 'bar_chart', size: ICON_SIZE }),
+    iconName: 'bar_chart',
     type: ModuleType.CORE,
   },
   {
     key: 'fotos',
     label: 'Fotos',
     path: '/fotos',
-    icon: createElement(Camera, { size: ICON_SIZE }),
+    icon: createElement(MaterialIcon, { name: 'photo_library', size: ICON_SIZE }),
+    iconName: 'photo_library',
     type: ModuleType.DLC,
   },
   {
     key: 'chatbot',
     label: 'Chatbot',
     path: '/chatbot',
-    icon: createElement(MessageSquare, { size: ICON_SIZE }),
+    icon: createElement(MaterialIcon, { name: 'chat', size: ICON_SIZE }),
+    iconName: 'chat',
     type: ModuleType.DLC,
   },
 ] as const

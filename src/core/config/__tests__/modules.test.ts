@@ -8,13 +8,13 @@ import {
 } from '@core/config/modules'
 
 describe('moduleRegistry', () => {
-  it('contains 11 modules total', () => {
-    expect(moduleRegistry).toHaveLength(11)
+  it('contains 13 modules total', () => {
+    expect(moduleRegistry).toHaveLength(13)
   })
 
-  it('has 9 core modules', () => {
+  it('has 11 core modules', () => {
     const coreModules = moduleRegistry.filter((m) => m.type === ModuleType.CORE)
-    expect(coreModules).toHaveLength(9)
+    expect(coreModules).toHaveLength(11)
   })
 
   it('has 2 DLC modules', () => {
@@ -41,12 +41,12 @@ describe('moduleRegistry', () => {
 })
 
 describe('allModuleKeys', () => {
-  it('contains all 11 keys', () => {
-    expect(allModuleKeys).toHaveLength(11)
+  it('contains all 13 keys', () => {
+    expect(allModuleKeys).toHaveLength(13)
   })
 
-  it('includes inventario as first key', () => {
-    expect(allModuleKeys[0]).toBe('inventario')
+  it('includes mapa as first key', () => {
+    expect(allModuleKeys[0]).toBe('mapa')
   })
 
   it('includes DLC keys', () => {
@@ -80,7 +80,7 @@ describe('getEnabledModules', () => {
 
   it('returns all modules when all keys provided', () => {
     const result = getEnabledModules([...allModuleKeys])
-    expect(result).toHaveLength(11)
+    expect(result).toHaveLength(13)
   })
 
   it('filters core modules the same way as DLC modules', () => {

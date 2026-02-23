@@ -1,9 +1,6 @@
-import { useLocation } from 'react-router'
 import { Menu, Bell, Sun, Moon, LogOut, User, Settings } from 'lucide-react'
 import { useAuth } from '@core/auth/useAuth'
-import { useTenant } from '@core/tenant/useTenant'
 import { useThemeMode } from '@core/hooks/useThemeMode'
-import { cn } from '@/lib/utils'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -13,6 +10,7 @@ import {
   Avatar,
   AvatarFallback,
 } from '@core/components/ui'
+import { DemeterLogo } from '@core/components/ui/DemeterLogo'
 
 interface HeaderProps {
   readonly onMenuToggle: () => void
@@ -20,12 +18,7 @@ interface HeaderProps {
 
 export function Header({ onMenuToggle }: HeaderProps) {
   const { user, logout } = useAuth()
-  const { tenantConfig } = useTenant()
   const { mode, toggle } = useThemeMode()
-  const location = useLocation()
-
-  const currentModule = location.pathname.split('/').filter(Boolean)[0] ?? ''
-  const moduleLabel = currentModule.charAt(0).toUpperCase() + currentModule.slice(1)
 
   const initials = user?.name
     ? user.name
@@ -39,37 +32,29 @@ export function Header({ onMenuToggle }: HeaderProps) {
   const notificationCount = 0
 
   return (
-    <header className="glass sticky top-0 z-30 flex h-14 items-center border-b border-border/50 px-4 shadow-[var(--shadow-xs)]">
+    <header
+      className="sticky top-0 z-30 flex h-16 items-center border-b px-4 md:hidden"
+      style={{
+        backgroundColor: 'rgba(246, 248, 246, 0.95)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        borderColor: 'rgba(229, 231, 235, 0.5)',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+      }}
+    >
       {/* Mobile menu button */}
       <button
         type="button"
         onClick={onMenuToggle}
-        className="mr-3 min-h-11 min-w-11 rounded-lg p-2 text-muted transition-all duration-200 hover:bg-surface-hover hover:text-text-primary md:hidden"
+        className="mr-3 min-h-11 min-w-11 rounded-lg p-2 transition-all duration-200 hover:bg-[rgba(64,160,74,0.1)]"
+        style={{ color: 'var(--demeter-text-secondary)' }}
         aria-label="Toggle menu"
       >
         <Menu className="h-5 w-5" />
       </button>
 
-      {/* Logo */}
-      <div className="flex items-center gap-2">
-        {tenantConfig.theme.logoUrl ? (
-          <img
-            src={tenantConfig.theme.logoUrl}
-            alt={tenantConfig.theme.appName}
-            className="h-8 w-auto"
-          />
-        ) : (
-          <span className="gradient-text text-lg font-bold">{tenantConfig.theme.appName}</span>
-        )}
-      </div>
-
-      {/* Breadcrumb */}
-      {moduleLabel && (
-        <div className="ml-4 hidden items-center gap-2 text-sm text-muted md:flex">
-          <span className="text-border">/</span>
-          <span className="font-medium text-text-secondary">{moduleLabel}</span>
-        </div>
-      )}
+      {/* Mobile Logo */}
+      <DemeterLogo size="sm" />
 
       {/* Spacer */}
       <div className="flex-1" />
@@ -80,7 +65,8 @@ export function Header({ onMenuToggle }: HeaderProps) {
         <button
           type="button"
           onClick={toggle}
-          className="min-h-11 min-w-11 rounded-lg p-2 text-muted transition-all duration-200 hover:bg-surface-hover hover:text-text-primary"
+          className="min-h-11 min-w-11 rounded-lg p-2 transition-all duration-200 hover:bg-[rgba(64,160,74,0.1)]"
+          style={{ color: 'var(--demeter-text-secondary)' }}
           aria-label={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
         >
           {mode === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
@@ -89,7 +75,8 @@ export function Header({ onMenuToggle }: HeaderProps) {
         {/* Notifications */}
         <button
           type="button"
-          className="relative min-h-11 min-w-11 rounded-lg p-2 text-muted transition-all duration-200 hover:bg-primary/10 hover:text-primary"
+          className="relative min-h-11 min-w-11 rounded-lg p-2 transition-all duration-200 hover:bg-[rgba(23,207,23,0.1)]"
+          style={{ color: 'var(--demeter-text-secondary)' }}
           aria-label="Notifications"
         >
           <Bell className="h-5 w-5" />
@@ -105,11 +92,19 @@ export function Header({ onMenuToggle }: HeaderProps) {
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className="flex items-center rounded-full ring-2 ring-primary/20 transition-all duration-200 hover:ring-primary/40 hover:shadow-[var(--shadow-glow-primary)]"
+              className="flex items-center rounded-full transition-all duration-200"
+              style={{
+                boxShadow: '0 0 0 2px rgba(64, 160, 74, 0.3)',
+              }}
               aria-label="User menu"
             >
               <Avatar className="h-9 w-9">
-                <AvatarFallback className="gradient-primary text-xs font-medium text-white">
+                <AvatarFallback
+                  className="text-xs font-medium text-white"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))',
+                  }}
+                >
                   {initials}
                 </AvatarFallback>
               </Avatar>

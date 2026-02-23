@@ -12,7 +12,6 @@ interface AppLayoutProps {
 
 export function AppLayout({ children, navItems }: AppLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
 
   const openSidebar = useCallback(() => {
     setIsSidebarOpen(true)
@@ -20,10 +19,6 @@ export function AppLayout({ children, navItems }: AppLayoutProps) {
 
   const closeSidebar = useCallback(() => {
     setIsSidebarOpen(false)
-  }, [])
-
-  const toggleCollapse = useCallback(() => {
-    setIsSidebarCollapsed((prev) => !prev)
   }, [])
 
   return (
@@ -35,20 +30,10 @@ export function AppLayout({ children, navItems }: AppLayoutProps) {
           items={navItems}
           isOpen={isSidebarOpen}
           onClose={closeSidebar}
-          isCollapsed={isSidebarCollapsed}
-          onToggleCollapse={toggleCollapse}
         />
 
-        {/* Main content */}
-        <main
-          className={[
-            'flex-1 transition-all duration-300',
-            // Desktop: offset for sidebar width
-            isSidebarCollapsed ? 'md:ml-16' : 'md:ml-60',
-            // Padding: account for mobile bottom nav
-            'p-4 pb-20 md:p-6 md:pb-6',
-          ].join(' ')}
-        >
+        {/* Main content - offset for collapsed sidebar (72px) */}
+        <main className="flex-1 transition-all duration-300 md:ml-[72px] p-4 pb-20 md:p-6 md:pb-6">
           <div className="mx-auto max-w-7xl">{children}</div>
         </main>
       </div>

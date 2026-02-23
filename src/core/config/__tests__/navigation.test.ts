@@ -9,9 +9,9 @@ describe('getNavItems', () => {
     expect(items.map((i) => i.label)).toEqual(['Inventario', 'Ventas'])
   })
 
-  it('returns all 11 items when all modules are enabled', () => {
+  it('returns all 13 items when all modules are enabled', () => {
     const items = getNavItems([...allModuleKeys])
-    expect(items).toHaveLength(11)
+    expect(items).toHaveLength(13)
   })
 
   it('returns empty array when no modules are enabled', () => {

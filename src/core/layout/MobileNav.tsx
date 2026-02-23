@@ -1,10 +1,10 @@
 import { useCallback, useState } from 'react'
 import { Link, useLocation } from 'react-router'
 import { motion } from 'framer-motion'
-import { MoreHorizontal } from 'lucide-react'
 import type { NavItem } from '@core/layout/types'
 import { cn } from '@/lib/utils'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@core/components/ui'
+import { MaterialIcon } from '@core/components/ui/MaterialIcon'
 
 interface MobileNavProps {
   readonly items: readonly NavItem[]
@@ -28,7 +28,13 @@ export function MobileNav({ items }: MobileNavProps) {
   const isOverflowActive = overflowItems.some((item) => isActive(item.path))
 
   return (
-    <nav className="glass fixed bottom-0 left-0 right-0 z-30 border-t border-border/50 shadow-[var(--shadow-md)] md:hidden">
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-30 border-t bg-white md:hidden"
+      style={{
+        borderColor: 'var(--demeter-border-sidebar)',
+        boxShadow: '0 -2px 8px rgba(0, 0, 0, 0.05)',
+      }}
+    >
       <ul className="flex items-center justify-around">
         {visibleItems.map((item) => {
           const active = isActive(item.path)
@@ -37,15 +43,16 @@ export function MobileNav({ items }: MobileNavProps) {
               <motion.div whileTap={{ scale: 0.92 }}>
                 <Link
                   to={item.path}
-                  className={cn(
-                    'relative flex flex-col items-center gap-0.5 px-2 py-3 text-xs font-medium transition-all duration-200',
-                    active ? 'text-primary' : 'text-muted',
-                  )}
+                  className="relative flex flex-col items-center gap-0.5 px-2 py-3 text-xs font-medium transition-all duration-200"
+                  style={{
+                    color: active ? '#40a04a' : '#6b806d',
+                  }}
                 >
                   {active && (
                     <motion.span
                       layoutId="mobile-nav-indicator"
-                      className="absolute inset-x-2 top-0 h-0.5 rounded-full bg-primary"
+                      className="absolute inset-x-2 top-0 h-0.5 rounded-full"
+                      style={{ backgroundColor: '#40a04a' }}
                       transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                     />
                   )}
@@ -65,19 +72,20 @@ export function MobileNav({ items }: MobileNavProps) {
                 <motion.button
                   whileTap={{ scale: 0.92 }}
                   type="button"
-                  className={cn(
-                    'relative flex w-full flex-col items-center gap-0.5 px-2 py-3 text-xs font-medium transition-all duration-200',
-                    isOverflowActive ? 'text-primary' : 'text-muted',
-                  )}
+                  className="relative flex w-full flex-col items-center gap-0.5 px-2 py-3 text-xs font-medium transition-all duration-200"
+                  style={{
+                    color: isOverflowActive ? '#40a04a' : '#6b806d',
+                  }}
                 >
                   {isOverflowActive && (
                     <motion.span
                       layoutId="mobile-nav-indicator"
-                      className="absolute inset-x-2 top-0 h-0.5 rounded-full bg-primary"
+                      className="absolute inset-x-2 top-0 h-0.5 rounded-full"
+                      style={{ backgroundColor: '#40a04a' }}
                       transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                     />
                   )}
-                  <MoreHorizontal className="h-5 w-5 flex-shrink-0" />
+                  <MaterialIcon name="more_horiz" size={24} />
                   <span className="truncate">More</span>
                 </motion.button>
               </SheetTrigger>
@@ -96,9 +104,12 @@ export function MobileNav({ items }: MobileNavProps) {
                           className={cn(
                             'flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-all duration-200',
                             active
-                              ? 'bg-primary/8 text-primary'
-                              : 'text-muted hover:bg-surface-hover hover:text-text-primary',
+                              ? 'bg-[rgba(64,160,74,0.1)]'
+                              : 'hover:bg-[rgba(64,160,74,0.05)]',
                           )}
+                          style={{
+                            color: active ? '#40a04a' : '#6b806d',
+                          }}
                         >
                           <span className="flex-shrink-0">{item.icon}</span>
                           <span>{item.label}</span>
